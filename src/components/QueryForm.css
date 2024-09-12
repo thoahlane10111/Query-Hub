@@ -1,0 +1,59 @@
+/* General layout for the form */
+.query-form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Create two columns */
+  grid-gap: 20px; /* Spacing between the fields */
+  padding: 20px;
+  max-width: 1200px; /* Set a max width */
+  margin: 0 auto; /* Center the form */
+}
+
+.query-form h2 {
+  grid-column: span 2; /* Make heading span both columns */
+  text-align: center;
+}
+
+.query-form div {
+  display: flex;
+  flex-direction: column;
+}
+
+.query-form label {
+  margin-bottom: 5px;
+}
+
+.query-form input,
+.query-form select,
+.query-form textarea,
+.query-form button {
+  padding: 10px;
+  font-size: 16px;
+}
+
+.query-form textarea {
+  resize: vertical;
+}
+
+.query-form button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 10px 20px;
+  align-self: flex-start;
+}
+
+.query-form button:hover {
+  background-color: #45a049;
+}
+
+.reports-section {
+  grid-column: span 2; /* Make the report section span both columns */
+}
+
+.date-time {
+  grid-column: span 2; /* Date and time spans both columns */
+  text-align: right;
+  font-style: italic;
+}

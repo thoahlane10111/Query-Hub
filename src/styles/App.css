@@ -1,0 +1,60 @@
+/* src/styles/App.css or your relevant CSS file */
+
+.App {
+  text-align: center;
+  background-color: #003300; /* Military green */
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+.App-header {
+  background-color: #002200; /* Darker green */
+  padding: 20px;
+  color: white;
+}
+
+.QueryForm,
+.Reports,
+.Dashboard,
+.Login {
+  margin: 20px;
+  padding: 20px;
+  border-radius: 5px;
+  background-color: #004400; /* Slightly lighter green */
+}
+
+input {
+  margin: 5px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #006600; /* Border color to match highlighted green */
+  outline: none;
+}
+
+input:focus {
+  border-color: #009900; /* Slightly lighter green when focused */
+  box-shadow: 0 0 5px rgba(0, 153, 0, 0.5); /* Glow effect on focus */
+}
+
+button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #006600; /* Highlighted green */
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #004d00; /* Slightly darker green on hover */
+}
+
+button:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 153, 0, 0.5); /* Glow effect on focus */
+}
+
+.error {
+  color: red;
+  margin-top: 10px;
+}
