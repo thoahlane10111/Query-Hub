@@ -1,9 +1,10 @@
 import React from "react";
 
-function Header() {
+function Header({ onToggleTheme, onSignOut }) {
   return (
-    <header className="App-header">
-      <h1>QueryHub</h1>
+    <header>
+      <button onClick={onToggleTheme}>Toggle Theme</button>
+      <button onClick={onSignOut}>Sign Out</button>
     </header>
   );
 }

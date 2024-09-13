@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { collection, addDoc, Timestamp } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  Timestamp,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
 import { getFirestore } from "firebase/firestore";
+import { CSVLink } from "react-csv";
+import { jsPDF } from "jspdf";
+import "jspdf-autotable"; // Import jsPDF autotable for better table handling
 import "./QueryForm.css"; // Import CSS for styling
 
 const QueryForm = () => {
@@ -16,6 +26,8 @@ const QueryForm = () => {
   const [currentDateTime, setCurrentDateTime] = useState(
     new Date().toLocaleString()
   );
+  const [results, setResults] = useState([]);
+  const [csvData, setCsvData] = useState([]);
 
   const db = getFirestore();
 
@@ -43,8 +55,59 @@ const QueryForm = () => {
     }
   };
 
-  const handleReportGeneration = () => {
-    alert(`Generating ${reportFormat} report from ${startDate} to ${endDate}`);
+  const handleReportGeneration = async () => {
+    const q = query(
+      collection(db, "queries"),
+      where("timestamp", ">=", new Date(startDate)),
+      where("timestamp", "<=", new Date(endDate))
+    );
+    const querySnapshot = await getDocs(q);
+    const data = querySnapshot.docs.map((doc) => doc.data());
+
+    setCsvData(data); // Set CSV data
+
+    if (reportFormat === "CSV") {
+      // Generate CSV Report
+      // Use CSVLink to generate and download CSV
+    } else if (reportFormat === "PDF") {
+      // Generate PDF Report
+      const doc = new jsPDF();
+      doc.text("Report Data", 10, 10);
+      doc.autoTable({
+        head: [
+          [
+            "Client Name",
+            "MSISDN",
+            "Category",
+            "Sub-Category",
+            "Status",
+            "Comments",
+            "Timestamp",
+          ],
+        ],
+        body: data.map((item) => [
+          item.clientName,
+          item.msisdn,
+          item.category,
+          item.subCategory,
+          item.status,
+          item.comments,
+          item.timestamp.toDate().toLocaleString(),
+        ]),
+      });
+      doc.save("report.pdf");
+    }
+  };
+
+  const handleSearch = async () => {
+    const q = query(
+      collection(db, "queries"),
+      where("clientName", "==", clientName),
+      where("msisdn", "==", msisdn)
+    );
+    const querySnapshot = await getDocs(q);
+    const searchResults = querySnapshot.docs.map((doc) => doc.data());
+    setResults(searchResults);
   };
 
   const subCategories = {
@@ -237,8 +300,51 @@ const QueryForm = () => {
         <button type="submit">Submit Query</button>
       </form>
 
-      <div className="reports-section">
-        <h2>Generate Reports</h2>
+      <div className="search-section">
+        <h2>Search Queries</h2>
+        <div className="form-row">
+          <div className="form-group">
+            <label htmlFor="searchClientName">Client Name</label>
+            <input
+              type="text"
+              id="searchClientName"
+              value={clientName}
+              onChange={(e) => setClientName(e.target.value)}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="searchMsisdn">MSISDN</label>
+            <input
+              type="text"
+              id="searchMsisdn"
+              value={msisdn}
+              onChange={(e) => setMsisdn(e.target.value)}
+            />
+          </div>
+        </div>
+        <button onClick={handleSearch}>Search</button>
+
+        <div className="results">
+          <h3>Search Results:</h3>
+          <ul>
+            {results.map((result, index) => (
+              <li key={index}>
+                <strong>Client Name:</strong> {result.clientName},{" "}
+                <strong>MSISDN:</strong> {result.msisdn},{" "}
+                <strong>Category:</strong> {result.category},{" "}
+                <strong>Sub-Category:</strong> {result.subCategory},{" "}
+                <strong>Status:</strong> {result.status},{" "}
+                <strong>Comments:</strong> {result.comments},{" "}
+                <strong>Timestamp:</strong>{" "}
+                {result.timestamp.toDate().toLocaleString()}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <div className="report-section">
+        <h2>Generate Report</h2>
         <div className="form-row">
           <div className="form-group">
             <label htmlFor="startDate">Start Date</label>
@@ -247,7 +353,6 @@ const QueryForm = () => {
               id="startDate"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              required
             />
           </div>
           <div className="form-group">
@@ -257,7 +362,6 @@ const QueryForm = () => {
               id="endDate"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              required
             />
           </div>
         </div>
@@ -268,19 +372,26 @@ const QueryForm = () => {
               id="reportFormat"
               value={reportFormat}
               onChange={(e) => setReportFormat(e.target.value)}
-              required
             >
               <option value="CSV">CSV</option>
               <option value="PDF">PDF</option>
             </select>
           </div>
         </div>
-        <button type="button" onClick={handleReportGeneration}>
-          Generate Report
-        </button>
+        <button onClick={handleReportGeneration}>Generate Report</button>
+        {reportFormat === "CSV" && csvData.length > 0 && (
+          <CSVLink
+            data={csvData}
+            filename={"report.csv"}
+            className="btn btn-primary"
+            target="_blank"
+          >
+            Download CSV Report
+          </CSVLink>
+        )}
       </div>
 
-      <div className="date-time">
+      <div className="datetime">
         <p>Current Date and Time: {currentDateTime}</p>
       </div>
     </div>
