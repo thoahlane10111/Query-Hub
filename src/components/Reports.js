@@ -8,40 +8,58 @@ function Reports() {
   const handleGenerateReport = async () => {
     const data = await fetchReportData(); // Replace with your data-fetching logic
 
-    if (reportType === "csv") {
-      // CSV Report
-      return (
-        <CSVLink data={data} filename="report.csv">
-          Download CSV
-        </CSVLink>
-      );
-    } else if (reportType === "pdf") {
-      // PDF Report
+    if (reportType === "pdf") {
       const doc = new jsPDF();
-      doc.text("Report Data", 10, 10); // Add actual data here
-      doc.save("report.pdf");
+      doc.text("Query Report", 10, 10); // Add title to the PDF
+
+      data.forEach((row, index) => {
+        doc.text(`${index + 1}: ${row[0]}, ${row[1]}`, 10, 20 + index * 10);
+      });
+
+      doc.save("report.pdf"); // Download the PDF report
     }
   };
 
   const fetchReportData = async () => {
-    // Replace with your data-fetching logic
+    // Replace this mock data with actual fetching logic
     return [
-      ["Header1", "Header2"],
       ["Data1", "Data2"],
+      ["Data3", "Data4"],
+      ["Data5", "Data6"],
     ];
   };
 
   return (
     <div>
-      <h2>Generate Report</h2>
+      <h2>Generate Reports</h2>
+      <label htmlFor="reportType">Choose Report Type:</label>
       <select
+        id="reportType"
         value={reportType}
         onChange={(e) => setReportType(e.target.value)}
       >
         <option value="csv">CSV</option>
         <option value="pdf">PDF</option>
       </select>
-      <button onClick={handleGenerateReport}>Generate Report</button>
+
+      <br />
+
+      {reportType === "csv" ? (
+        <CSVLink
+          data={[
+            ["Data1", "Data2"],
+            ["Data3", "Data4"],
+            ["Data5", "Data6"],
+          ]}
+          filename={"report.csv"}
+          className="btn"
+          target="_blank"
+        >
+          Download CSV Report
+        </CSVLink>
+      ) : (
+        <button onClick={handleGenerateReport}>Download PDF Report</button>
+      )}
     </div>
   );
 }

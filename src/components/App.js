@@ -1,3 +1,4 @@
+// src/components/App.js
 import React, { useState, useEffect } from "react";
 import Header from "./Header";
 import QueryForm from "./QueryForm";
@@ -28,6 +29,7 @@ function App() {
     signOut(auth)
       .then(() => {
         // Signed out successfully
+        setUser(null); // Clear the user state when signed out
       })
       .catch((error) => {
         console.error("Error signing out: ", error);
@@ -36,7 +38,11 @@ function App() {
 
   return (
     <div className={darkMode ? "dark-mode" : "light-mode"}>
-      <Header onToggleTheme={toggleTheme} onSignOut={handleSignOut} />
+      <Header
+        onToggleTheme={toggleTheme}
+        onSignOut={handleSignOut}
+        user={user} // Pass the user information to the Header component
+      />
       {user ? (
         <>
           <Dashboard />
@@ -51,3 +57,4 @@ function App() {
 }
 
 export default App;
+
