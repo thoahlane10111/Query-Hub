@@ -21,10 +21,10 @@ const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
 // Initialize Firebase Auth and Firestore
 const auth = getAuth(app);
-const firestore = getFirestore(app);
+const db = getFirestore(app); // Renamed to `db` to match usage in your code
 
 // Initialize Firebase Analytics
 const analytics = getAnalytics(app);
 
 // Export Auth and Firestore instances for use in other parts of the app
-export { auth, firestore };
+export { auth, db }; // Export `db` instead of `firestore`
