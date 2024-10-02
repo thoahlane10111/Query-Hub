@@ -79,5 +79,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 For any inquiries, feel free to contact me at:  
 **Name**: Mabilikoe Thoahlane  
-**Email**: your-email@example.com
+**Email**: thoahlane10111@gmail.com
 
